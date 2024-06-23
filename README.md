@@ -2,6 +2,8 @@
 
 This is a RESTful API for managing a task list, implemented using FastAPI and containerized with Docker with "Clean Architecture" design pattern.
 
+<img width="1149" alt="Clean Architecture Demo" src="https://github.com/thomas-chiang/fastapi_clean_architecture/assets/84237929/2cd0a482-bc44-41ea-b41d-1a14f3ba5893">
+
 ## Features
 
 - CRUD operations for tasks
