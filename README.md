@@ -43,6 +43,16 @@ This is a RESTful API for managing a task list, implemented using FastAPI and co
     docker-compose up --build
     ```
 
+## Documentation
+- openapi
+- prod: http://localhost/docs
+- dev: http://127.0.0.1:8000/docs
+- Http Basic Authentication for ```v1/token``` endpoint:
+    - username: ```admin```
+    - password: ```password```
+
+
+
 ## Test
 - run
  
