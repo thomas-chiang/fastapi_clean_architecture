@@ -21,16 +21,16 @@ from ..auth.jwt import get_credentials
 task_port: TaskPort = TaskRepository(db=db)
 task_service: TaskUseCase = TaskService(task_port=task_port)
 
-
 router = APIRouter(dependencies=[Depends(get_credentials)])
 
 
 @router.get("/v1/tasks", response_model=TaskListResult, summary="List all tasks")
 async def list_tasks():
+    tasks = await task_service.list_tasks()
     return TaskListResult(
         result=[
             TaskWebInterface(id=task.id, name=task.name, status=task.status.value)
-            for task in task_service.list_tasks()
+            for task in tasks
         ]
     )
 
@@ -42,7 +42,7 @@ async def list_tasks():
     summary="Create a new task",
 )
 async def create_task(task_create_for_web: TaskCreateWebInterface):
-    task: Task = task_service.create_task(name=task_create_for_web.name)
+    task: Task = await task_service.create_task(name=task_create_for_web.name)
     return TaskResult(
         result=TaskWebInterface(id=task.id, name=task.name, status=task.status.value)
     )
@@ -51,7 +51,7 @@ async def create_task(task_create_for_web: TaskCreateWebInterface):
 @router.put("/v1/task/{task_id}", response_model=TaskResult, summary="Update a task")
 async def update_task(task_id: int, task_update_for_web: TaskUpdateWebInterface):
     try:
-        task: Task = task_service.update_task(
+        task: Task = await task_service.update_task(
             name=task_update_for_web.name,
             status=Status(task_update_for_web.status),
             id=task_id,
@@ -67,7 +67,7 @@ async def update_task(task_id: int, task_update_for_web: TaskUpdateWebInterface)
 @router.delete("/v1/task/{task_id}", status_code=200, summary="Delete a task")
 async def delete_task(task_id: int):
     try:
-        task_service.delete_task(task_id)
+        await task_service.delete_task(task_id)
     except TaskServiceTaskNotFoundError:
         raise TaskNotFoundError(task_id=task_id)
 
